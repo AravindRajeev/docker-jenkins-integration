@@ -1,3 +1,3 @@
 FROM tomcat
-COPY sampleapp.war /usr/local/tomcat/webapps
+COPY target/sampleapp.war /usr/local/tomcat/webapps
 CMD ["catalina.sh", "run"]
