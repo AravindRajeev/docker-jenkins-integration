@@ -9,6 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ar</groupId>
+	<packaging>war</packaging>
 	<artifactId>docker-jenkins-integration</artifactId>
 	<version>0.0.1</version>
 	<name>docker-jenkins-integration</name>
