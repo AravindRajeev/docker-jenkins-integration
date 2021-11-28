@@ -1,13 +1,32 @@
-node {
+pipeline {
+  environment {
+    imagename = "9400608284/tomcat-application"
+    registryCredential = 'dockerHub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/AravindRajeev/docker-jenkins-integration.git']]])
 
-    checkout scm
-    stage('build')      
-          sh 'mvn clean package' 
-    docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
-
-        def customImage = docker.build("9400608284/docker-jenkins-integartion")
-
-        /* Push the container to the custom Registry */
-        customImage.push()
+      }
     }
-}
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')
+
+          }
+        }
+      }
+    }
